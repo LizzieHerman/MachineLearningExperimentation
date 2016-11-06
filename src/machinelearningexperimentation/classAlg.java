@@ -24,7 +24,7 @@ public abstract class classAlg {
 //might be a pain to read in all those values-- since we'll need to differentiate what we want the variables to be
 //or we take the time to hard code them in, unless someone is expereience in how to read in largs amounts of data.
     
-    public void run(){
+    public void run(){//***THIS OCCURES FOR EVERY ALGORITHM IMPLEMENTATION.***
         /*This method represents the general outline of the process every algorithm will make use of.*/
         //fillSet(sortSet[]); //fills in any missing values, if nessissary, for the dataset.
         //Fillset will need to occure before run is called, to ensure the exact same filled in values are used for each algorithm.
@@ -42,6 +42,8 @@ public abstract class classAlg {
         returns our accuracy, or issues that occured while sorting.
         */
     } 
+    
+    
     
     public dataObject[] readSet(dataObject[] newInput){
         //needs to find or read in one data set for the algorithm to run on, and put it in an array.
@@ -75,8 +77,15 @@ public abstract class classAlg {
         then runs the classification algorithm as persribed. It then calls newSets and repeats however many times we need it to
         before returning the average of each newSet call and classification run*/
         double accuracy;
+        double average = 0;
+        int trailCount = 0;
+        for (int i=0; i < 100; i++){
         Seperate();
-               
+        accuracy = algorithm(trainingSet, testSet);
+        average = average + accuracy;
+        trailCount++;
+        }
+        average = average/trailCount;
         return 0;
     }
     
