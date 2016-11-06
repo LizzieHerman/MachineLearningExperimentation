@@ -10,7 +10,10 @@ package machinelearning;
  * @Ryan Freivalds s53q433
  */
 
-//IMPORTANT! This class is abstact! We only ever make instances of the sorting algorithms as subclasses to this abstract class!
+//IMPORTANT! This class is abstact! We only ever make instances of the classification algorithms as subclasses to this abstract class!
+//This class generalizes the process each alg is going follow-- it takes filled input, makes testing and training sets, 
+//passes those to a method that trains the algorithm, tracks our hit/miss rate and calling 
+//the actual algorithm implementation from it's subclass objects.
 public abstract class classAlg { 
     public int size; //how many entries are being read in
     dataObject[] sortSet = new dataObject[size]; //represents our raw input
