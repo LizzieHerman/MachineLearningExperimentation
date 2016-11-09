@@ -10,11 +10,14 @@ package machinelearningexperimentation;
 
 import java.io.*;
 public class MachineLearningExperimentation {
-    static String[][] cancer = new String[699][11]; // all int values except those that are missing
-    static String[][] glass = new String[214][11]; // all double values, except id num and class which are ints
-    static String[][] iris = new String[150][5]; // all double values, except class which is string can easily be converted into int
-    static String[][] soybean = new String[47][36]; // all int values, except class which is string can easily be converted into int
-    static String[][] vote = new String[435][17]; // all char values, except class which is string can easily be converted into char
+    static int[][] cancer = new int[699][11]; // missing values are recorded in array -1
+    static double[][] contGlass = new double[214][11]; // all double values, except id num and class which are ints
+    static double[][] contIris = new double[150][5]; // Iris-setosa = 1; Iris-versicolor = 2; Iris-virginica = 3
+    static int[][] soybean = new int[47][36]; // class values D1-D4 to 1-4
+    static char[][] vote = new char[435][17]; // republican = r; democrat = d
+    static int[][] glass = new int[214][11]; // for when we discretize the data
+    static int[][] iris = new int[150][5]; // for when we discretize the data
+    
 
     public static void main(String[] args) {
        readFiles();
@@ -40,13 +43,18 @@ public class MachineLearningExperimentation {
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
+        String[] split;
         
         try {
             br = new BufferedReader(new FileReader(cancerFile));
             int i = 0;
             line = br.readLine();
             while (line != null) {
-                cancer[i] = line.split(cvsSplitBy);
+                split = line.split(cvsSplitBy);
+                for(int j = 0; j < cancer[i].length; j++){
+                    if(split[j].equalsIgnoreCase("?")) cancer[i][j] = -1;
+                    else cancer[i][j] = Integer.parseInt(split[j]);
+                }
                 i++;
                 line = br.readLine();
             }
@@ -56,7 +64,10 @@ public class MachineLearningExperimentation {
             i = 0;
             line = br.readLine();
             while (line != null) {
-                glass[i] = line.split(cvsSplitBy);
+                split = line.split(cvsSplitBy);
+                for(int j = 0; j < contGlass[i].length; j++){
+                    contGlass[i][j] = Double.parseDouble(split[j]);
+                }
                 i++;
                 line = br.readLine();
             }
@@ -66,7 +77,13 @@ public class MachineLearningExperimentation {
             i = 0;
             line = br.readLine();
             while (line != null) {
-                iris[i] = line.split(cvsSplitBy);
+                split = line.split(cvsSplitBy);
+                for(int j = 0; j < contIris[i].length; j++){
+                    if(split[j].equalsIgnoreCase("iris-setosa")) contIris[i][j] = 1;
+                    else if(split[j].equalsIgnoreCase("iris-versicolor")) contIris[i][j] = 2;
+                    else if(split[j].equalsIgnoreCase("iris-virginica")) contIris[i][j] = 3;
+                    else contIris[i][j] = Double.parseDouble(split[j]);
+                }
                 i++;
                 line = br.readLine();
             }
@@ -76,7 +93,14 @@ public class MachineLearningExperimentation {
             i = 0;
             line = br.readLine();
             while (line != null) {
-                soybean[i] = line.split(cvsSplitBy);
+                split = line.split(cvsSplitBy);
+                for(int j = 0; j < soybean[i].length; j++){
+                    if(split[j].equalsIgnoreCase("d1")) soybean[i][j] = 1;
+                    else if(split[j].equalsIgnoreCase("d2")) soybean[i][j] = 2;
+                    else if(split[j].equalsIgnoreCase("d3")) soybean[i][j] = 3;
+                    else if(split[j].equalsIgnoreCase("d4")) soybean[i][j] = 4;
+                    else soybean[i][j] = Integer.parseInt(split[j]);
+                }
                 i++;
                 line = br.readLine();
             }
@@ -86,7 +110,10 @@ public class MachineLearningExperimentation {
             i = 0;
             line = br.readLine();
             while (line != null) {
-                vote[i] = line.split(cvsSplitBy);
+                split = line.split(cvsSplitBy);
+                for(int j = 0; j < vote[i].length; j++){
+                    vote[i][j] = split[j].charAt(0);
+                }
                 i++;
                 line = br.readLine();
             }
