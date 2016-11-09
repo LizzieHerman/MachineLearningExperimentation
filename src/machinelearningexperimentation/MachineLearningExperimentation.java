@@ -9,6 +9,7 @@ package machinelearningexperimentation;
  */
 
 import java.io.*;
+import java.util.Random;
 public class MachineLearningExperimentation {
     static int[][] cancer = new int[699][11]; // missing values are recorded in array -1
     static double[][] contGlass = new double[214][11]; // all double values, except id num and class which are ints
@@ -22,6 +23,7 @@ public class MachineLearningExperimentation {
     public static void main(String[] args) {
        readFiles();
        // TO-DO get rid of the unknown values
+       replaceUnknowns();
        // TO-DO convert continuous values to discrete ones
        
        // split data into training and data sets
@@ -122,6 +124,22 @@ public class MachineLearningExperimentation {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    static void replaceUnknowns(){
+        Random rand = new Random();
+        for(int i = 0; i < cancer.length; i++){
+            for(int j = 0; j < cancer[i].length; j++){
+                if(cancer[i][j] == -1){
+                    cancer[i][j] = 1 + rand.nextInt(10);
+                    /**
+                     * this just randomly assigns a number in the range (1 - 10)
+                     * to the unknown value, we might want to make it less random
+                     * so it fits with the other data better
+                     */
+                }
+            }
         }
     }
 }
