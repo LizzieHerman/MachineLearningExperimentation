@@ -10,16 +10,23 @@ package machinelearningexperimentation;
 
 import java.io.*;
 public class MachineLearningExperimentation {
-    static String[][] cancer = new String[699][11];
-    static String[][] glass = new String[214][11];
-    static String[][] iris = new String[150][5];
-    static String[][] soybean = new String[47][36];
-    static String[][] vote = new String[435][17];
+    static String[][] cancer = new String[699][11]; // all int values except those that are missing
+    static String[][] glass = new String[214][11]; // all double values, except id num and class which are ints
+    static String[][] iris = new String[150][5]; // all double values, except class which is string can easily be converted into int
+    static String[][] soybean = new String[47][36]; // all int values, except class which is string can easily be converted into int
+    static String[][] vote = new String[435][17]; // all char values, except class which is string can easily be converted into char
 
     public static void main(String[] args) {
        readFiles();
+       // TO-DO get rid of the unknown values
+       // TO-DO convert continuous values to discrete ones
        
+       // split data into training and data sets
        
+       // Run these for each algorithm
+       // TO-DO run training set
+       // TO-DO run test set
+       // TO-DO check how test set did
     }
     
     static void readFiles(){
