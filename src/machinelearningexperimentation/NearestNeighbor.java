@@ -9,7 +9,7 @@ public class NearestNeighbor extends classAlg{
     //needs a constructor to accept a dataset that's been filled if needed, and it's own classification implementation
 
  @Override
-public double algorithm(dataObject[] train, dataObject[] test){
+public double algorithm(String[][] train, String[][] test){
      return 0;
 }
 }
