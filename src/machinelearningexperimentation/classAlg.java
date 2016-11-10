@@ -49,6 +49,7 @@ public abstract class classAlg {
     public String[][] readSet(String[][] newInput){
         //needs to find or read in one data set for the algorithm to run on, and put it in an array.
         //returns that array for use.
+	    
         return null;
     }
     
@@ -63,13 +64,31 @@ public abstract class classAlg {
         //All this method does is take our filled in input array, and shuffles the indexes into a new array, using every index
         //the first half of this new array represents out training set, the last half our testing set.
         //This method will be called many times while an algorithm is being assessed.
-        return null;
+	String[][] shuffle = new String[sortSet.length][sortSet[1].length];
+	String[][] temp = new String[sortSet.length][sortSet[1].length]
+	int rand = 0;
+	    for (int k = 0; k<3; k++)
+		    for (int i = 0; i<sortSet.length; i++){
+			 rand = (int)math.random();   
+			 temp[i] = sortSet[i];
+			 sortSet[i] = sortSet[rand];
+			 sortSet[rand] = temp[i];
+		    }
+		}
+        return shuffle;
     }
     
     private void Seperate(){
         //helper method that cuts our sortSet in half, actually setting trainingSet = to the first half and test set = to the last half
         //should be it's own method, because it will need to happen many times
         //returns nothing, as it sets the public variables equal to the halves they need to be
+	   for(int i =0; i < (int)(readySet.length)/2; i++){
+		trainingSet[i] = readySet[i];
+	   }
+	   for(int k =(int)(readySet.length)/2; k < readySet.length; k++){
+		testSet[k] = readySet[k];
+	   }
+		   
     }
     
 
