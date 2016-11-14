@@ -72,9 +72,23 @@ public class NearestNeighbor extends classAlg {
                    double entrydist = dist(singdist);
                    //insert sort into our array of nearest neighbours? 
                    for (int l = 0; l < k; l++){
-                   
-                       //TODO
-                       
+                        if (canddist[l] == null){ 
+                            canddist[l] = entrydist;
+                            candidate[l] = training[j];
+                            break;
+                        }
+                       else if (entrydist < canddist[l]){
+                           String[] temp = candidate[l];
+                           double tempdist = canddist[l];
+                           canddist[l] = entrydist;
+                           candidate[l] = training[j];
+                           for (int m = l+1; m < k; m++){ //new distence is inserted, now swap out other values with temp 
+                               String[] temp2 = canddist
+                                   //RESUME HERE
+                                   
+                           }
+                           break;
+                        }
                    }    
                } //end of "for every entry" TRAINING
             //assign a class to the individual test entry here based on the classes of its nearest neighbours
