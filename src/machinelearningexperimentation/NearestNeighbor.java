@@ -19,22 +19,26 @@ public class NearestNeighbor extends classAlg {
 
     @Override
     public double algorithm(String[][] train, String[][] test) { //current implementation assumes String[*][0] holds our classification for an entry.
-        int k = 7; //how many nearest neighbours we compare against
+        int k = 8; //how many nearest neighbours we compare against
+        
         //because the training for nearest neighbour is simply storing out training sets for comparison, we have to extract the details of outcomes.
         this.classes = new ArrayList(); //how many classifications
         this.output = new ArrayList[train[0].length]; //how many values an attribute can have
         this.train = train;
+        System.out.println("Detected " + train[0].length + " attribute fields."); //testline
         for (int n = 0; n < train.length; n++) {
             if (!classes.contains(train[n][0])) { //if this classification hasn't been seen
                 classes.add(train[n][0]); //then add it to our list of classifications
             }
         }
+        System.out.println("Detected " + classes.size() + " classifications."); //testlines
         for (int i = 1; i < train[0].length; i++) {//Counting through the attribute TYPES. n=1 because we are not currently conserned with the classification of either set. 
             for (int m = 0; m < train.length; m++) { //checking how many outcomes for a SINGLE TYPE of attribute across MULTIPLE DATA ENTRIES
                 if (!output[i].contains(train[m][i])) { //if this outcome hasn't been seen
                     output[i].add(train[m][i]); //then add it to our list of outcomes for that SPECIFIC attribute [i]
                 }//DIFFICULTY: The number of values for an attribute is not likely to be uniform, making it difficult to instanciate properly sized 2d array to count instances of outcomes.
             }
+         System.out.println("Detected " + output[i].size() + " different outcomes for attribute "+ i +".")//testlines
         }
         //now we know all possible outcomes, but we still need to tally know how many.
         //this is the most brutal nesting of loops I've ever done. IF THERE IS A PROBLEM IT'S PROBABLY HERE.        
@@ -54,6 +58,22 @@ public class NearestNeighbor extends classAlg {
         //I can only really, really hope that works as intended. Going to have to cram a shit ton of print statements in there later to make sure, probably.
         //So, assumably, we know now have how many outcomes were seen for each outcome for each attribute of the training set. That should be enough to vdm.
         //So, now that we can execute the VDM, we take a test entry and use the vdm find it's K closest entries, and have them vote on test's class.
+        
+        String[][] candidate = new String[k][];//holds our ENTRIES for our nearest neighbours
+        //TODO
+        for (int i = 0; i < test.length; i++) {// for every entry in our TESTing set
+               for (int j = 0; j < test.length; j++) {// for every entry in our TRAINING set
+                  double[] singdist = new double [test[i].length]//short for "single distences, represents the distences between individual attribues, to be used to calculate the distences of entries from one another.
+                  //should be cleared out for every training entry than, right?
+                  for (int a = 1; a < test[i].length; a++) { //for every attribute of both entries that must be compared (excludes the classification).
+                     singdist[a] = vdm(a,test[i][a],train[j][a]); //add a new value to the double array for individual attribute distences here.
+                      
+                      
+                  } //end of "for every attribute" 
+                   //calculate distences between entries here, find the closest ones.
+               } //end of "for every entry" TRAINING
+        } //end of "for every entry" TESTING
+        
         
         return 0;
     }
@@ -91,8 +111,21 @@ public class NearestNeighbor extends classAlg {
                     val2++;
                 }
             }
-            distence += abs((val1 / outputCounter[attr][v1outCountIndex])-(val2 / outputCounter[attr][v2outCountIndex]));
+            distence += abs((val1 / outputCounter[attr][v1outCountIndex])-(val2 / outputCounter[attr][v2outCountIndex])); 
+            //now we square it for use in the conventional distence formula
+            distence = distence * distence;
         }
         return distence;
     }
+    
+    public double dist(double[] attdist){ //takes an array of distences between attributes and finds the distence between entries. Short for "Distence" and "attribute distences" respectively.
+        //the input's values should already be squared, so we add them all up, then take the square root of that total for the distence between two entries.
+        double total = 0;
+        for (int i = 0; i < attdist.length; i++){ //for every attribute we've found a distence for
+            total += attdist[i]
+        }
+        total = sqrt(total);
+        return total;
+    }
+    
 }
