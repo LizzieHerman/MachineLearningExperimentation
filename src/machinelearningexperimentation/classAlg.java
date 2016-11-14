@@ -94,7 +94,7 @@ public abstract class classAlg {
                //the classification for the testset is copied over, because we don't know nessissarily know where it is in the array. 
                //we can clear it later or just write over it.
 		testSet[k] = readySet[k];
-                //the answer key is never changed, so we can compare the testSet to something to see if we were right or wrong.
+                //the answer key is never changed, so we can change and compare the testSet to something to see if we were right or wrong.
                 answerKey[k] = readySet[k];
 	   }
 		   
@@ -109,11 +109,11 @@ public abstract class classAlg {
         double average = 0;
         int trailCount = 0;
         for (int i=0; i < 100; i++){
-        Seperate();
         accuracy = algorithm(trainingSet, testSet);
         System.out.println("Accuracy for trial #" + i + " was " + accuracy + "%."); //testline
         average = average + accuracy;
         trailCount++;
+	readyset = newSets(readyset);
         }
         average = average/trailCount;
         return average;
