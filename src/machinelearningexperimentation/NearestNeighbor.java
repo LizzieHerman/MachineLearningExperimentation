@@ -60,20 +60,26 @@ public class NearestNeighbor extends classAlg {
         //So, now that we can execute the VDM, we take a test entry and use the vdm find it's K closest entries, and have them vote on test's class.
         
         String[][] candidate = new String[k][];//holds our ENTRIES for our nearest neighbours
-        //TODO
         for (int i = 0; i < test.length; i++) {// for every entry in our TESTing set
                for (int j = 0; j < test.length; j++) {// for every entry in our TRAINING set
                   double[] singdist = new double [test[i].length]//short for "single distences, represents the distences between individual attribues, to be used to calculate the distences of entries from one another.
                   //should be cleared out for every training entry than, right?
                   for (int a = 1; a < test[i].length; a++) { //for every attribute of both entries that must be compared (excludes the classification).
                      singdist[a] = vdm(a,test[i][a],train[j][a]); //add a new value to the double array for individual attribute distences here.
-                      
-                      
                   } //end of "for every attribute" 
+                   double[] canddist = new double [k] //candidate distences to our test point
                    //calculate distences between entries here, find the closest ones.
+                   double entrydist = dist(singdist);
+                   //insert sort into our array of nearest neighbours? 
+                   for (int l = 0; l < k; l++){
+                   
+                       //TODO
+                       
+                   }    
                } //end of "for every entry" TRAINING
+            //assign a class to the individual test entry here based on the classes of its nearest neighbours
         } //end of "for every entry" TESTING
-        
+        //tally our accuracy
         
         return 0;
     }
