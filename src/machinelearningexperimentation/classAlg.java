@@ -36,6 +36,14 @@ public abstract class classAlg {
         sortSet = readSet(input); //accepts our data for local object use. 
         
         readySet = newSets(sortSet); 
+        //System.out.println(readySet[0]);//testline
+        String[][] trainingSet = new String[readySet.length/2][];
+        this.trainingSet = trainingSet;
+        String[][] testSet = new String[readySet.length/2+1][];
+        this.testSet = testSet;
+        String[][] answerKey = new String[readySet.length/2+1][];
+        this.answerKey = answerKey;
+        Seperate();
         /*randomly seperates our data entries into a test and training sets. 
         The training set will be the first half of the array (rounding down) and the testing set will be the later half (rounding up).
         This will be  be called multiple times by the sorting alg.*/
@@ -70,32 +78,37 @@ public abstract class classAlg {
         //This method will be called many times while an algorithm is being assessed.
 	String[][] shuffle = new String[sortSet.length][sortSet[1].length];
 	String[][] temp = new String[sortSet.length][sortSet[1].length];
+        shuffle = sortSet;
 	int rand = 0;
 	    for (int k = 0; k<3; k++){
-		    for (int i = 0; i<sortSet.length; i++){
-			 rand = (int)(random()*sortSet.length);   
-			 temp[i] = sortSet[i];
-			 sortSet[i] = sortSet[rand];
-			 sortSet[rand] = temp[i];
+		    for (int i = 0; i<shuffle.length; i++){
+			 rand = (int)(random()*shuffle.length);   
+			 temp[i] = shuffle[i];
+			 shuffle[i] = shuffle[rand];
+			 shuffle[rand] = temp[i];
 		    }
 		}
-            Seperate();
+            
         return shuffle;
     }
     
-    private void Seperate(){//AUTOMATICALLY CALLED BY newSets()!
+    private void Seperate(){
         //helper method that cuts our sortSet in half, actually setting trainingSet = to the first half and test set = to the last half
         //should be it's own method, because it will need to happen many times
         //returns nothing, as it sets the public variables equal to the halves they need to be
 	   for(int i =0; i < (int)(readySet.length)/2; i++){
 		trainingSet[i] = readySet[i];
 	   }
-	   for(int k =(int)(readySet.length)/2; k < readySet.length; k++){
+	   for(int k =(int)((readySet.length)/2); k < readySet.length; k++){
                //the classification for the testset is copied over, because we don't know nessissarily know where it is in the array. 
                //we can clear it later or just write over it.
-		testSet[k] = readySet[k];
+               //System.out.println("iterator = " + k);
+               //System.out.println("index of " + (k-(int)((readySet.length)/2)));
+              // System.out.println(readySet[k]);
+               //System.out.println(testSet[k][1]);
+		testSet[k-(int)((readySet.length)/2)] = readySet[k];
                 //the answer key is never changed, so we can change and compare the testSet to something to see if we were right or wrong.
-                answerKey[k] = readySet[k];
+                answerKey[k-(int)((readySet.length)/2)] = readySet[k];
 	   }
 		   
     }
@@ -113,7 +126,8 @@ public abstract class classAlg {
         System.out.println("Accuracy for trial #" + i + " was " + accuracy + "%."); //testline
         average = average + accuracy;
         trailCount++;
-	readyset = newSets(readyset);
+	readySet = newSets(readySet);
+        Seperate();
         }
         average = average/trailCount;
         return average;
