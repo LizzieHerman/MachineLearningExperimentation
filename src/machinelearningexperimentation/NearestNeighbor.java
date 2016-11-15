@@ -76,6 +76,7 @@ public class NearestNeighbor extends classAlg {
                 canddist[x] = inf; //filling distences with infinity
             }
             for (int j = 0; j < train.length; j++) {// for every entry in our TRAINING set
+                //System.out.println("comparing new attributes from entry number "+ j +"."); //good printline
                 double[] singdist = new double[test[i].length];//short for "single distences, represents the distences between individual attribues, to be used to calculate the distences of entries from one another.
                 for (int a = 1; a < test[i].length; a++) { //for every attribute of both entries that must be compared (excludes the classification).
                     singdist[a] = vdm(a, test[i][a], train[j][a]); //add a new value to the double array for individual attribute distences here.
@@ -90,31 +91,50 @@ public class NearestNeighbor extends classAlg {
                 }
                 */
                 //insert sort into our array of nearest neighbours?  
-               System.out.println("comparing new distence " + entrydist + " to old candidate distence of " + canddist[0]);//IMPORTANT testline
-                //NEEDS REWORK
-                for (int l = 0; l < k - 1; l++) { //the minus 1 might be unnessissary
+              // System.out.println("comparing new distence " + entrydist + " to old candidate distence of " + canddist[0]);//IMPORTANT testline
+                for (int l = 0; l < k; l++) { //the minus 1 might be unnessissary
+                    //System.out.println("comparing new distence " + entrydist + " to old candidate distence of " + canddist[l]);//semi-IMPORTANT testline
                     /*
                     if (canddist[l] == 0.0) {
                         canddist[l] = entrydist;
                         candidate[l] = train[j];
                         break;
-                    } else */if (entrydist <= canddist[l]) {
+                    
+                    } else */if (entrydist <= canddist[l]) {//if this new entry is closer to our target than the point held at l
                         //System.out.println("comparing new distence "+entrydist+ " to old candidate distence of "+canddist[0]);//testline
-                        String[] temp = candidate[l];
-                        candidate[l + 1] = candidate[l];
-                        candidate[l] = train[j];
                         double tempdist = canddist[l];
-                        canddist[l + 1] = canddist[l];
+                        double tempdist2 = inf;
+                        String[] temp = candidate[l];
+                        String[] temp2 = null;
+                        if(l != k-1){
+                            tempdist2 = canddist[l + 1];
+                            temp2 = candidate[l+1];
+                        }
+                        
                         canddist[l] = entrydist;
-                        for (int m = l + 1; m < k - 1; m++) { //new distence is inserted, now swap out other values with temp 
-                            temp = candidate[m];
+                        candidate[l] = train[j];
+                        for (int m = l+1; m < k-1; m++) {//for the rest of the current indexes of our closest neighbours
+                        
+                        canddist[m] = tempdist; //canddist[l+1] = canddist[l]
+                        tempdist = tempdist2; //temp1 = temp2
+                        tempdist2 = canddist[m + 1]; //temp2 = canddist[l+2]
+                        
+                        candidate[m] = temp;
+                        temp = temp2;
+                        temp2 = candidate[m + 1];
+  
+                        }
+                        canddist[k-1] = tempdist;
+                        candidate[k-1] = temp;
+                        break;
+                        /*
+                        temp = candidate[m];
                             candidate[m + 1] = candidate[m];
                             candidate[m] = train[j];
                             tempdist = canddist[m];
                             canddist[m + 1] = canddist[m];
                             canddist[m] = entrydist;
-                        }
-                        break;
+                        */
                     } else if (entrydist < canddist[k - 1]) { //if we're just dealing with replacing the last&largest value
                         canddist[k - 1] = entrydist;
                         candidate[k - 1] = train[j];
