@@ -21,5 +21,4 @@ public class ID3 extends classAlg {
         return "ID3";
     }
 
-    
 }

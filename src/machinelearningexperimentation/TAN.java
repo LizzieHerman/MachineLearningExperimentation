@@ -21,6 +21,5 @@ public class TAN extends classAlg{
         return "TAN";
     }
 
- 
-    
+
 }

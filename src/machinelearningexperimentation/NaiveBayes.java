@@ -21,5 +21,4 @@ public class NaiveBayes extends classAlg{
         return "Naive Bayes";
     }
 
- 
 }

@@ -7,6 +7,7 @@ import java.io.*;
 /**
  * @author Lizzie Herman
  * @author Ryan Freivald
+
  */
 
 //IMPORTANT! This class is abstact! We only ever make instances of the classification algorithms as subclasses to this abstract class!
@@ -78,4 +79,5 @@ public abstract class classAlg {
          * implemented by each individual class/algorithm. Not here. 
          * Returns an integer array of the classes given to the entries in the test set
          */     
+
 }
