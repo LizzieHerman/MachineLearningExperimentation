@@ -188,7 +188,7 @@ public class NearestNeighbor extends classAlg {
                 if (train[e][attr].equals(v1)) { //if that entry's attribute equals one of the values we're compairing. 
                     val1++;
                 }
-                if (train[e][attr].equals(v1)) { //if that entry's attribute the other value we're compairing. 
+                if (train[e][attr].equals(v2)) { //if that entry's attribute the other value we're compairing. 
                     val2++;
                 }
             }
