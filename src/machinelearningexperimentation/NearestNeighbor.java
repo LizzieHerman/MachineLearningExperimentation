@@ -24,7 +24,12 @@ public class NearestNeighbor extends classAlg {
 
         //because the training for nearest neighbour is simply storing out training sets for comparison, we have to extract the details of outcomes.
         this.classes = new ArrayList(); //how many classifications
-        this.output = new ArrayList[train[0].length]; //how many values an attribute can have
+        ArrayList[] output = new ArrayList[train[0].length]; //how many values an attribute can have
+       // System.out.println("arraylist array size of "+ train[0].length);
+        for (int i = 1; i < train[0].length; i++) {
+            output[i] = new ArrayList();
+        }
+        this.output = output;
         this.train = train;
         System.out.println("Detected " + train[0].length + " attribute fields."); //testline
         for (int n = 0; n < train.length; n++) {
@@ -34,8 +39,10 @@ public class NearestNeighbor extends classAlg {
         }
         System.out.println("Detected " + classes.size() + " classifications."); //testlines
         for (int i = 1; i < train[0].length; i++) {//Counting through the attribute TYPES. n=1 because we are not currently conserned with the classification of either set. 
+            //System.out.println("testing initialization of output["+i+"]: "+ output[i]);
+            //output[i] = new ArrayList();
             for (int m = 0; m < train.length; m++) { //checking how many outcomes for a SINGLE TYPE of attribute across MULTIPLE DATA ENTRIES
-                if (!output[i].contains(train[m][i])) { //if this outcome hasn't been seen
+                if (output[i].contains(train[m][i]) == false) { //if this outcome hasn't been seen
                     output[i].add(train[m][i]); //then add it to our list of outcomes for that SPECIFIC attribute [i]
                 }//DIFFICULTY: The number of values for an attribute is not likely to be uniform, making it difficult to instanciate properly sized 2d array to count instances of outcomes.
             }
@@ -153,16 +160,22 @@ public class NearestNeighbor extends classAlg {
         int v2outCountIndex = -5000;
         boolean ready1 = false; //to stop some unnessissary checks.
         boolean ready2 = false;
+        System.out.println("Checking "+output[attr].size()+ " output types.");//testline
+        System.out.println("Searching for outputs '"+v1+ "' and '"+v2+"'.");
         for (int b = 0; b < output[attr].size(); b++) { //for each kind of output that was seen
+            System.out.println("Checking output type "+b+": "+output[attr].get(b)+".");//testline
             if (output[attr].get(b) == v1) {
+                System.out.println("Value One match found.");//testline
                 v1outCountIndex = b;
                 ready1 = true;
             }
             if (output[attr].get(b) == v2) {
+                System.out.println("Value Two match found.");//testline
                 v2outCountIndex = b;
                 ready2 = true;
             }
             if (ready1 == true && ready2 == true) {
+                System.out.println("Critical break condition met."); //testline
                 break;
             }
         }
