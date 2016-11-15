@@ -68,9 +68,13 @@ public class NearestNeighbor extends classAlg {
         //So, now that we can execute the VDM, we take a test entry and use the vdm find it's K closest entries, and have them vote on test's class.
 
         double hit = 0;
+        double inf = Double.POSITIVE_INFINITY;
         for (int i = 0; i < test.length; i++) {// for every entry in our TESTing set
             String[][] candidate = new String[k][];//holds our ENTRIES for our nearest neighbours
             double[] canddist = new double[k]; //candidate distences to our test point.
+            for(int x = 0; x<k; x++){
+                canddist[x] = inf; //filling distences with infinity
+            }
             for (int j = 0; j < train.length; j++) {// for every entry in our TRAINING set
                 double[] singdist = new double[test[i].length];//short for "single distences, represents the distences between individual attribues, to be used to calculate the distences of entries from one another.
                 for (int a = 1; a < test[i].length; a++) { //for every attribute of both entries that must be compared (excludes the classification).
@@ -80,21 +84,21 @@ public class NearestNeighbor extends classAlg {
                 
                 //calculate distences between entries here, find the closest ones.
                 double entrydist = dist(singdist);
-                
+                /*
                 if (j<k){
                     
                 }
-                
+                */
                 //insert sort into our array of nearest neighbours?  
                System.out.println("comparing new distence " + entrydist + " to old candidate distence of " + canddist[0]);//IMPORTANT testline
                 //NEEDS REWORK
                 for (int l = 0; l < k - 1; l++) { //the minus 1 might be unnessissary
-
+                    /*
                     if (canddist[l] == 0.0) {
                         canddist[l] = entrydist;
                         candidate[l] = train[j];
                         break;
-                    } else if (entrydist < canddist[l]) {
+                    } else */if (entrydist <= canddist[l]) {
                         //System.out.println("comparing new distence "+entrydist+ " to old candidate distence of "+canddist[0]);//testline
                         String[] temp = candidate[l];
                         candidate[l + 1] = candidate[l];
