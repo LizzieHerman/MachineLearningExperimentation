@@ -2,6 +2,7 @@ package machinelearningexperimentation;
 
 import java.util.Arrays;
 import java.util.Random;
+import java.io.*;
 
 /**
  * @author Lizzie Herman
@@ -19,10 +20,13 @@ public abstract class classAlg {
         int[][] trainSet = new int[size][input[0].length];
         int[][] testSet = new int[input.length - size][input[0].length];
         
+        // print out the name of the algorithm being used
+        // System.out.println(getName());
+        writeToResult(getName());
+                
         // run the algorithm
         // 5x2 cross validation means we ran the program 5 times
         for(int i = 0; i < 5; i++){
-            System.out.println(getName());
             totalSet = shuffleSets(totalSet);
             //separate sets
             trainSet = Arrays.copyOfRange(input, 0, trainSet.length);
@@ -39,7 +43,22 @@ public abstract class classAlg {
             }
             
             double propRight = right/testSet.length;
-            System.out.println(propRight);
+            
+            // print out the proportion of right answers
+            //System.out.println(propRight);
+            writeToResult(Double.toString(propRight));
+        }
+    }
+    
+    public void writeToResult(String str){
+        try {
+            PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("results.csv", true)));
+            result.print("," + str);
+            result.close();
+        } catch(FileNotFoundException e){
+            e.printStackTrace();
+        } catch(IOException e){
+            e.printStackTrace();
         }
     }
     

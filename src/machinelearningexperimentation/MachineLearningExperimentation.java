@@ -37,10 +37,45 @@ public class MachineLearningExperimentation {
         int[][] datasets[] = {cancer, glass, iris, soybean, vote};
         
         classAlg[] algorithms = {new NearestNeighbor(), new ID3(), new NaiveBayes(), new TAN()};
+        int i = 0;
         for(int[][] dataset : datasets){
             for(classAlg algorithm : algorithms){
+                writeToResult(i);
                 algorithm.run(dataset);
+                writeToResult(10);
             }
+            i++;
+        }
+    }
+    
+    static void writeToResult(int dataset){
+        try {
+            PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("results.csv", true)));
+            switch(dataset){
+                case 0:
+                    result.print("cancer");
+                    break;
+                case 1:
+                    result.print("glass");
+                    break;
+                case 2:
+                    result.print("iris");
+                    break;
+                case 3:
+                    result.print("soybean");
+                    break;
+                case 4:
+                    result.print("vote");
+                    break;
+                default:
+                    result.println();
+                    break;
+            }
+            result.close();
+        } catch(FileNotFoundException e){
+            e.printStackTrace();
+        } catch(IOException e){
+            e.printStackTrace();
         }
     }
     
@@ -149,9 +184,9 @@ public class MachineLearningExperimentation {
                 line = br.readLine();
             }
             br.close();
-        } catch (FileNotFoundException e) {
+        } catch(FileNotFoundException e){
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch(IOException e){
             e.printStackTrace();
         }
     }
