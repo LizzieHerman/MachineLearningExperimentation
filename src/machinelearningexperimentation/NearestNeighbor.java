@@ -25,7 +25,7 @@ public class NearestNeighbor extends classAlg {
         //because the training for nearest neighbour is simply storing out training sets for comparison, we have to extract the details of outcomes.
         this.classes = new ArrayList(); //how many classifications
         ArrayList[] output = new ArrayList[train[0].length]; //how many values an attribute can have
-       // System.out.println("arraylist array size of "+ train[0].length);
+        // System.out.println("arraylist array size of "+ train[0].length);
         for (int i = 1; i < train[0].length; i++) {
             output[i] = new ArrayList();
         }
@@ -53,7 +53,7 @@ public class NearestNeighbor extends classAlg {
         outputCounter = new int[train[0].length][];
         //outputCounter[a][b] where [a] is the attribute, [b] is the type of outcome witnessed, holding the number of times it was seen.
         //we know how many attributes there are right now, but not nessessarily how many outcomes there were per attribute.
-        for (int a = 1; a < train[0].length; a++) {//Counting through the attribute TYPES.
+        for (int a = 1; a < train[0].length; a++) {//Counting through the attribute TYPES (excludes the classification).
             outputCounter[a] = new int[output[a].size()]; //so for attribute [a], outputCounter[a][] becomes outputCounter[a][how many kinds of output were seen]
             for (int m = 0; m < train.length; m++) { //checking how many outcomes for a SINGLE TYPE of attribute across MULTIPLE DATA ENTRIES
                 for (int b = 0; b < output[a].size(); b++) { //for each outcome for that attribute
@@ -69,32 +69,38 @@ public class NearestNeighbor extends classAlg {
 
         String[][] candidate = new String[k][];//holds our ENTRIES for our nearest neighbours
         for (int i = 0; i < test.length; i++) {// for every entry in our TESTing set
-            for (int j = 0; j < test.length; j++) {// for every entry in our TRAINING set
+            for (int j = 0; j < train.length; j++) {// for every entry in our TRAINING set
                 double[] singdist = new double[test[i].length];//short for "single distences, represents the distences between individual attribues, to be used to calculate the distences of entries from one another.
                 //should be cleared out for every training entry than, right?
                 for (int a = 1; a < test[i].length; a++) { //for every attribute of both entries that must be compared (excludes the classification).
                     singdist[a] = vdm(a, test[i][a], train[j][a]); //add a new value to the double array for individual attribute distences here.
                 } //end of "for every attribute" 
-                double[] canddist = new double[k]; //candidate distences to our test point
+                double[] canddist = new double[k]; //candidate distences to our test point.
+              /*  for (int l = 0; l < k; l++) {
+                    canddist[l] = 50000; //filling the 
+                }*/
                 //calculate distences between entries here, find the closest ones.
                 double entrydist = dist(singdist);
                 //insert sort into our array of nearest neighbours? 
-                for (int l = 0; l < k - 1; l++) {
-                    /*
-                        if (canddist[l] == null){ 
+                 System.out.println("comparing new distence "+entrydist+ " to old candidate distence of "+canddist[0]);//IMPORTANT testline
+              //NEEDS REWORK
+                 for (int l = 0; l < k-1; l++) { //the minus 1 might be unnessissary
+                    
+                        if (canddist[l] == 0.0){ 
                             canddist[l] = entrydist;
                             candidate[l] = train[j];
                             break;
                         }
-                       else */
-                    if (entrydist < canddist[l]) {
+                       
+                   else if (entrydist < canddist[l]) {
+                        //System.out.println("comparing new distence "+entrydist+ " to old candidate distence of "+canddist[0]);//testline
                         String[] temp = candidate[l];
                         candidate[l + 1] = candidate[l];
                         candidate[l] = train[j];
                         double tempdist = canddist[l];
                         canddist[l + 1] = canddist[l];
                         canddist[l] = entrydist;
-                        for (int m = l + 1; m < k; m++) { //new distence is inserted, now swap out other values with temp 
+                        for (int m = l + 1; m < k - 1; m++) { //new distence is inserted, now swap out other values with temp 
                             temp = candidate[m];
                             candidate[m + 1] = candidate[m];
                             candidate[m] = train[j];
@@ -113,13 +119,16 @@ public class NearestNeighbor extends classAlg {
             //assign a class to the individual test entry here based on the classes of its nearest neighbours
             int winner = -1;
             for (int nn = 0; nn < k; nn++) {
+                //System.out.println("candidate number "+ nn+":"); //testline
                 int[] vote = new int[classes.size()]; //how we tally the votes
                 for (int a = 0; a < classes.size(); a++) {
                     vote[a] = 0;//zeroing out the array, just to be safe.
                 }
 
                 for (int a = 0; a < classes.size(); a++) {//for all our classifications
-                    if (candidate[nn][0] == classes.get(a)) { //if our current nearest neighbour had that classification
+                    //System.out.println("classification number "+ a+":"); //testline
+                   // System.out.println("comparing classification of "+candidate[nn][0]+" to "+ classes.get(a)); //testline
+                    if (candidate[nn][0].equals(classes.get(a))) { //if our current nearest neighbour had that classification
                         vote[a]++; //increment that vote, then stop.
                         break;
                     }
@@ -133,24 +142,24 @@ public class NearestNeighbor extends classAlg {
                     }
                 }
             }
-            System.out.println("Assigning entry "+ i + " the classification of " +classes.get(winner) +".");
+            //System.out.println("Assigning entry "+ i + " the classification of " +classes.get(winner) +".");
             test[i][0] = (String) classes.get(winner); //we have now made our choice for a single test entry
         } //end of "for every entry" TESTING
         //now tally our accuracy
         int hit = 0;
         int tally = 0;
-        for (int i = 0; i < test[0].length; i++) {//for every test entry
+        for (int i = 0; i < test.length; i++) {//for every test entry
             tally++;
-            if( test[i][0] == answerKey[i][0]){//if our newly assigned classification is what the entry actually was
+            if (test[i][0].equals(answerKey[i][0])) {//if our newly assigned classification is what the entry actually was
                 hit++; //increment our number of correct guesses.
             }
         }
         System.out.println("");
         System.out.println("----------------------------------------------------------");
-        System.out.println("For this test set we guessed correctly "+hit+" out of "+tally+" entries. Our accuracy was "+hit/tally+"%." );
+        System.out.println("For this test set we guessed correctly " + hit + " out of " + tally + " entries. Our accuracy was " + hit / tally + "%.");
         System.out.println("----------------------------------------------------------");
         System.out.println("");
-        return hit/tally;
+        return hit / tally;
     }
 
     public double vdm(int attr, String v1, String v2) { //v for "value," attr is the index of the "attribute" we're finding distences for the two values being compaired
@@ -160,22 +169,22 @@ public class NearestNeighbor extends classAlg {
         int v2outCountIndex = -5000;
         boolean ready1 = false; //to stop some unnessissary checks.
         boolean ready2 = false;
-        System.out.println("Checking "+output[attr].size()+ " output types.");//testline
-        System.out.println("Searching for outputs '"+v1+ "' and '"+v2+"'.");
+        //  System.out.println("Checking "+output[attr].size()+ " output types.");//testline
+        // System.out.println("Searching for outputs '"+v1+ "' and '"+v2+"'.");
         for (int b = 0; b < output[attr].size(); b++) { //for each kind of output that was seen
-            System.out.println("Checking output type "+b+": "+output[attr].get(b)+".");//testline
-            if (output[attr].get(b) == v1) {
-                System.out.println("Value One match found.");//testline
+            // System.out.println("Checking output type "+b+": "+output[attr].get(b)+".");//testline
+            if (output[attr].get(b).equals(v1)) {
+                // System.out.println("Value One match found.");//testline
                 v1outCountIndex = b;
                 ready1 = true;
             }
-            if (output[attr].get(b) == v2) {
-                System.out.println("Value Two match found.");//testline
+            if (output[attr].get(b).equals(v2)) {
+                // System.out.println("Value Two match found.");//testline
                 v2outCountIndex = b;
                 ready2 = true;
             }
             if (ready1 == true && ready2 == true) {
-                System.out.println("Critical break condition met."); //testline
+                //System.out.println("Critical break condition met."); //testline
                 break;
             }
         }
@@ -192,7 +201,15 @@ public class NearestNeighbor extends classAlg {
                     val2++;
                 }
             }
-            distence += abs((val1 / outputCounter[attr][v1outCountIndex]) - (val2 / outputCounter[attr][v2outCountIndex]));
+            if (v1outCountIndex == -5000 && v2outCountIndex == -5000) {
+                distence += abs((val1 / 1) - (val2 / 1));
+            } else if ((v1outCountIndex == -5000)) {
+                distence += abs((val1 / 1) - (val2 / outputCounter[attr][v2outCountIndex]));
+            } else if ((v2outCountIndex == -5000)) {
+                distence += abs((val1 / outputCounter[attr][v1outCountIndex]) - (val2 / 1));
+            } else {
+                distence += abs((val1 / outputCounter[attr][v1outCountIndex]) - (val2 / outputCounter[attr][v2outCountIndex]));
+            }
             //now we square it for use in the conventional distence formula
             distence = distence * distence;
         }
