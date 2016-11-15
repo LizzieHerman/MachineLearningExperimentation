@@ -67,32 +67,34 @@ public class NearestNeighbor extends classAlg {
         //So, assumably, we know now have how many outcomes were seen for each outcome for each attribute of the training set. That should be enough to vdm.
         //So, now that we can execute the VDM, we take a test entry and use the vdm find it's K closest entries, and have them vote on test's class.
 
-        String[][] candidate = new String[k][];//holds our ENTRIES for our nearest neighbours
+        double hit = 0;
         for (int i = 0; i < test.length; i++) {// for every entry in our TESTing set
+            String[][] candidate = new String[k][];//holds our ENTRIES for our nearest neighbours
+            double[] canddist = new double[k]; //candidate distences to our test point.
             for (int j = 0; j < train.length; j++) {// for every entry in our TRAINING set
                 double[] singdist = new double[test[i].length];//short for "single distences, represents the distences between individual attribues, to be used to calculate the distences of entries from one another.
-                //should be cleared out for every training entry than, right?
                 for (int a = 1; a < test[i].length; a++) { //for every attribute of both entries that must be compared (excludes the classification).
                     singdist[a] = vdm(a, test[i][a], train[j][a]); //add a new value to the double array for individual attribute distences here.
                 } //end of "for every attribute" 
-                double[] canddist = new double[k]; //candidate distences to our test point.
-              /*  for (int l = 0; l < k; l++) {
-                    canddist[l] = 50000; //filling the 
-                }*/
+
+                
                 //calculate distences between entries here, find the closest ones.
                 double entrydist = dist(singdist);
-                //insert sort into our array of nearest neighbours? 
-                 System.out.println("comparing new distence "+entrydist+ " to old candidate distence of "+canddist[0]);//IMPORTANT testline
-              //NEEDS REWORK
-                 for (int l = 0; l < k-1; l++) { //the minus 1 might be unnessissary
+                
+                if (j<k){
                     
-                        if (canddist[l] == 0.0){ 
-                            canddist[l] = entrydist;
-                            candidate[l] = train[j];
-                            break;
-                        }
-                       
-                   else if (entrydist < canddist[l]) {
+                }
+                
+                //insert sort into our array of nearest neighbours?  
+               System.out.println("comparing new distence " + entrydist + " to old candidate distence of " + canddist[0]);//IMPORTANT testline
+                //NEEDS REWORK
+                for (int l = 0; l < k - 1; l++) { //the minus 1 might be unnessissary
+
+                    if (canddist[l] == 0.0) {
+                        canddist[l] = entrydist;
+                        candidate[l] = train[j];
+                        break;
+                    } else if (entrydist < canddist[l]) {
                         //System.out.println("comparing new distence "+entrydist+ " to old candidate distence of "+canddist[0]);//testline
                         String[] temp = candidate[l];
                         candidate[l + 1] = candidate[l];
@@ -127,7 +129,7 @@ public class NearestNeighbor extends classAlg {
 
                 for (int a = 0; a < classes.size(); a++) {//for all our classifications
                     //System.out.println("classification number "+ a+":"); //testline
-                   // System.out.println("comparing classification of "+candidate[nn][0]+" to "+ classes.get(a)); //testline
+                    // System.out.println("comparing classification of "+candidate[nn][0]+" to "+ classes.get(a)); //testline
                     if (candidate[nn][0].equals(classes.get(a))) { //if our current nearest neighbour had that classification
                         vote[a]++; //increment that vote, then stop.
                         break;
@@ -142,17 +144,16 @@ public class NearestNeighbor extends classAlg {
                     }
                 }
             }
-            //System.out.println("Assigning entry "+ i + " the classification of " +classes.get(winner) +".");
+            //System.out.println("Assigning entry "+ i + ", " + test[i][0]+ ", the classification of " +classes.get(winner) +".");
+            if (test[i][0].equals(classes.get(winner))) {//if our newly assigned classification is what the entry actually was
+                hit++; //increment our number of correct guesses.
+            }
             test[i][0] = (String) classes.get(winner); //we have now made our choice for a single test entry
         } //end of "for every entry" TESTING
         //now tally our accuracy
-        int hit = 0;
-        int tally = 0;
+        double tally = 0;
         for (int i = 0; i < test.length; i++) {//for every test entry
             tally++;
-            if (test[i][0].equals(answerKey[i][0])) {//if our newly assigned classification is what the entry actually was
-                hit++; //increment our number of correct guesses.
-            }
         }
         System.out.println("");
         System.out.println("----------------------------------------------------------");
