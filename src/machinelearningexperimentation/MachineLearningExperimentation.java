@@ -35,7 +35,6 @@ public class MachineLearningExperimentation {
         classToLast();
         // Run these for each algorithm
         int[][] datasets[] = {cancer, glass, iris, soybean, vote};
-        
         classAlg[] algorithms = {new NearestNeighbor(), new ID3(), new NaiveBayes(), new TAN()};
         int i = 0;
         for(int[][] dataset : datasets){
@@ -240,11 +239,12 @@ public class MachineLearningExperimentation {
                     iris[i][j] = (int)current;
                     continue;
                 }
-                int k = 0;
-                while(k < n && current <= irisVals[j][k]){
-                    k++;
-                }    
-                iris[i][j] = k;
+                for(int k = 0; k < n; k++){
+                    if(current < irisVals[j][k]){
+                        iris[i][j] = k;
+                        break;
+                    }
+                }
             }
         }
         for(int i = 0; i < contGlass.length; i++){
@@ -254,11 +254,12 @@ public class MachineLearningExperimentation {
                     glass[i][j] = (int)current;
                     continue;
                 }
-                int k = 0;
-                while(k < n && current <= glassVals[j][k]){
-                    k++;
-                }    
-                glass[i][j] = k;
+                for(int k = 0; k < n; k++){
+                    if(current < glassVals[j][k]){
+                        glass[i][j] = k;
+                        break;
+                    }
+                }
             }
         }
     }
