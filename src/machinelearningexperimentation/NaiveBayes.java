@@ -2,8 +2,7 @@ package machinelearningexperimentation;
 
 /**
  *
- * @author Lizzie Herman
- * Ryan Freivalds
+ * @author Connor O'Leary
  */
 public class NaiveBayes extends classAlg{
 

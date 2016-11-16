@@ -2,8 +2,7 @@ package machinelearningexperimentation;
 
 /**
  *
- * @author Lizzie Herman
- * @Ryan Freivalds s53q433
+ * @author Greg Nzenanski
  */
 public class ID3 extends classAlg {
 

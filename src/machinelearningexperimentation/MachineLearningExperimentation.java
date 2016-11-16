@@ -35,7 +35,7 @@ public class MachineLearningExperimentation {
         classToLast();
         // Run these for each algorithm
         int[][] datasets[] = {cancer, glass, iris, soybean, vote};
-        classAlg[] algorithms = {new NearestNeighbor(), new ID3(), new NaiveBayes(), new TAN()};
+        classAlg[] algorithms = {/*new NearestNeighbor(), */new ID3(), new NaiveBayes(), new TAN()};
         int i = 0;
         for(int[][] dataset : datasets){
             for(classAlg algorithm : algorithms){
