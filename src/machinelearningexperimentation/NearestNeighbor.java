@@ -6,8 +6,8 @@ import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 
 /**
- *
- * @author Lizzie Herman Ryan Freivalds
+ * @author Lizzie Herman 
+ * @author Ryan Freivalds
  */
 public class NearestNeighbor extends classAlg {
 
@@ -251,4 +251,16 @@ public class NearestNeighbor extends classAlg {
         return total;
     }
 
+    @Override
+    public int[] algorithm(int[][] train, int[][] test) {
+        // TO-DO train your algorithm
+        int[] classes = new int[test.length];
+        // TO-DO test your algorithm
+        return classes;
+    }
+
+    @Override
+    public String getName() {
+        return "Nearest Neighbor";
+    }
 }
