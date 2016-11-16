@@ -32,8 +32,8 @@ public abstract class classAlg {
         for(int i = 0; i < 5; i++){
             totalSet = shuffleSets(totalSet);
             //separate sets
-            setOne = Arrays.copyOfRange(input, 0, size1);
-            setTwo = Arrays.copyOfRange(input, size1, input.length);
+            setOne = Arrays.copyOfRange(totalSet, 0, size1);
+            setTwo = Arrays.copyOfRange(totalSet, size1, input.length);
             
             int[] classes = algorithm(Arrays.copyOf(setOne, size1), Arrays.copyOf(setTwo, size2));
             // count the number of right and wrong classifications
@@ -73,14 +73,15 @@ public abstract class classAlg {
     }
     
     private int[][] shuffleSets(int[][] input){
-        int[][] shuffled = new int[input.length][input[0].length];
         Random rand = new Random();
         // using the Fisher-Yates algorithm to shuffle entries
-        for(int i = input[0].length - 1; i > 0; i--){
+        for(int i = input.length - 1; i > 0; i--){
             int j = rand.nextInt(i);
-            shuffled[j] = input[i];
+            int[] temp = input[j];
+            input[j] = input[i];
+            input[i] = temp;
         }
-        return shuffled;
+        return input;
     }
     public abstract String getName();
     public abstract int[] algorithm(int[][] train, int[][] test);
