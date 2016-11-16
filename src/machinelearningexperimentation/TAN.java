@@ -37,17 +37,19 @@ public class TAN extends classAlg{
                 }
             }
         }
-        System.out.println(Arrays.toString(countVal));
+        //System.out.println(Arrays.toString(countVal));
+        
+        Graph graph = new Graph();
+        graph.createFullGraph(nameVal);
+        //System.out.println("num nodes: " + graph.nodes.size() + " num edges: " + graph.edges.size());
         for(int i = 0; i < numAttr; i++){
-            for(Object v : vals[i]){
-                for(Object c : vals[numAttr]){
-                    //blah
-                }
+            for(int j = i+1; j < numAttr; j++){
+                double totalProportion = 0;
+                // TO-DO calculate proportions of these to attributes together
+                graph.addWeight(totalProportion, Integer.toString(i), Integer.toString(j));
             }
         }
         
-        Graph graph = new Graph(countVal.length - 1);
-        graph.createFullGraph(nameVal);
     }
     
 
