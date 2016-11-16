@@ -3,6 +3,7 @@ package machinelearningexperimentation;
 import java.util.Arrays;
 import java.util.Random;
 import java.io.*;
+import static java.lang.Math.random;
 
 /**
  * @author Lizzie Herman
