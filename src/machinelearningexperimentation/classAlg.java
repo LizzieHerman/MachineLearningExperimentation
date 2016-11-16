@@ -3,6 +3,7 @@ package machinelearningexperimentation;
 import java.util.Arrays;
 import java.util.Random;
 import java.io.*;
+import static java.lang.Math.random;
 
 /**
  * @author Lizzie Herman
@@ -63,16 +64,21 @@ public abstract class classAlg {
         }
     }
     
-    private int[][] shuffleSets(int[][] input){
-        int[][] shuffled = new int[input.length][input[0].length];
+    private String[][] shuffleSets(String[][] input){
+        String[][] shuffled = new String[input.length][input[0].length];
+        shuffled = input;
+        String[][] temp = input; 
         Random rand = new Random();
         // using the Fisher-Yates algorithm to shuffle entries
-        for(int i = input[0].length - 1; i > 0; i--){
-            int j = rand.nextInt(i);
-            shuffled[j] = input[i];
+        for(int i = 0; i < input[0].length; i++){
+            int j = (int)(random()*input.length); 
+            temp[i] = shuffled[i];
+            shuffled[i] = shuffled[j];
+            shuffled[j] = temp[i];
         }
         return shuffled;
-    }
+        }
+    
     public abstract String getName();
     public abstract int[] algorithm(int[][] train, int[][] test);
         /**
