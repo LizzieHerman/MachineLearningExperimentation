@@ -236,7 +236,7 @@ public class MachineLearningExperimentation {
         for(int i = 0; i < contIris.length; i++){
             for(int j = 0; j < contIris[i].length; j++){
                 current = contIris[i][j];
-                if(irisVals[j][0] == -1){
+                if(j == contIris[0].length - 1 ){
                     iris[i][j] = (int)current;
                     continue;
                 }
@@ -250,7 +250,7 @@ public class MachineLearningExperimentation {
         for(int i = 0; i < contGlass.length; i++){
             for(int j = 0; j < contGlass[i].length; j++){
                 current = contGlass[i][j];
-                if(glassVals[j][0] == -1){
+                if(j == contGlass[0].length - 1 || j == 0){
                     glass[i][j] = (int)current;
                     continue;
                 }
