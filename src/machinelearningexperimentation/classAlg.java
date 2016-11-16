@@ -17,9 +17,11 @@ import java.io.*;
 public abstract class classAlg {
     public void run(int[][] input){
         int[][] totalSet = input;
-        int size = (input.length / 2);
-        int[][] trainSet = new int[size][input[0].length];
-        int[][] testSet = new int[input.length - size][input[0].length];
+        int size1 = (input.length / 2);
+        int size2 = (input.length - size1);
+        int[][] setOne = new int[size1][input[0].length];
+        int[][] setTwo = new int[size2][input[0].length];
+        
         
         // print out the name of the algorithm being used
         // System.out.println(getName());
@@ -30,21 +32,28 @@ public abstract class classAlg {
         for(int i = 0; i < 5; i++){
             totalSet = shuffleSets(totalSet);
             //separate sets
-            trainSet = Arrays.copyOfRange(input, 0, trainSet.length);
-            testSet = Arrays.copyOfRange(input, trainSet.length, input.length);
+            setOne = Arrays.copyOfRange(input, 0, size1);
+            setTwo = Arrays.copyOfRange(input, size1, input.length);
             
-            int[] classes = algorithm(trainSet, testSet);
-            
+            int[] classes = algorithm(Arrays.copyOf(setOne, size1), Arrays.copyOf(setTwo, size2));
             // count the number of right and wrong classifications
             int right = 0;
-            int wrong = 0;
-            for(int j = 0; j < testSet.length; j++){
-                if(classes[j] == testSet[j][testSet[j].length - 1]) right++;
-                else wrong++;
+            for(int j = 0; j < size2; j++){
+                if(classes[j] == setTwo[j][setTwo[j].length - 1]) right++;
             }
+            double propRight = right/size2;
+            // print out the proportion of right answers
+            //System.out.println(propRight);
+            writeToResult(Double.toString(propRight));
             
-            double propRight = right/testSet.length;
-            
+            // flip test/train sets and run again
+            classes = algorithm(Arrays.copyOf(setTwo, size2), Arrays.copyOf(setOne, size1));
+            // count the number of right and wrong classifications
+            right = 0;
+            for(int j = 0; j < size1; j++){
+                if(classes[j] == setOne[j][setOne[j].length - 1]) right++;
+            }
+            propRight = right/size1;
             // print out the proportion of right answers
             //System.out.println(propRight);
             writeToResult(Double.toString(propRight));
