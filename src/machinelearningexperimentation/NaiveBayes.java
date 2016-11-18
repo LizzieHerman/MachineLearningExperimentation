@@ -101,30 +101,37 @@ public class NaiveBayes extends classAlg {
 		int[] classes = new int[test.length];
 		for (i = 0; i < test.length; i++) { //for each data point
 			iterOutcomes = -1;
-			for (Integer loopC : outcomes.keySet()) {
+			for (Integer loopC : outcomes.keySet()) { //for each possible outcome class
 				iterOutcomes++;
 				C = loopC;
 				probC = (double) outcomes.get(C) / train.length; // P(C)
-				j = 0;
-				for (int dim : test[i]) {
+				//System.out.println(probC);
+				
+				for (j=0; j<test[i].length-1; j++) { //for each dimension except the last one
+					int dim=test[i][j];
 					num=0;
 					for (Integer key : classChoices.get(iterOutcomes).get(j).keySet()) {
 						num += classChoices.get(iterOutcomes).get(j).get(key); // get the total number of the class given an outcome
 					}
-					if (classChoices.get(iterOutcomes).get(j).containsKey(dim))
+					if (classChoices.get(iterOutcomes).get(j).containsKey(dim)){
 						probC *= (double)(classChoices.get(iterOutcomes).get(j).get(dim))/num;
+					//System.out.println(probC);
+				}
 					else {
-						probC *= .1/num; //very unlikely if there is none is this class but not impossible
+						probC *= .01/num; //very unlikely if there is none is this class but not impossible
 						break;
 					}
-					j++;
 
 				}
+				//System.out.println(probC+" "+C);
+				if (probC > maxProb) { // select the maximum probability
+					//System.out.println(probC);
+					maxProb = probC;
+					classes[i] = C;
+				}
 			}
-			if (probC > maxProb) { // select the maximum probability
-				maxProb = probC;
-				classes[i] = C;
-			}
+			maxProb=0;
+			System.out.println(classes[i]==test[i][test[i].length-1]);
 		}
 		return classes;
 	}
