@@ -93,8 +93,6 @@ public class ID3 extends classAlg {
     	decisionTree.add(new Node(null));
         decisionTree = split(counts, decisionTree, classList, dataset, decisionTree.root); //Create the decision tree by splitting on attributes until all data is classified
     	
-    	//Print tree?
-    	
     	return decisionTree;
     }
     
@@ -113,7 +111,7 @@ public class ID3 extends classAlg {
     		return tree;
     	}else if(tree.current.leaf){
     		return tree;
-    	}else if (tree.current == null){////////////////////////////////////////////////
+    	}else if (tree.current == null){
     		return tree;
     	}else{
     		double[] startEntropy = new double[counts.size()]; //Holds starting entropy value of attributes
@@ -131,14 +129,17 @@ public class ID3 extends classAlg {
 	    	}
 	    	
 	    	for(int i = 0; i < counts.size(); i++){ //Calculate the expected entropy for each attribute
+	    		//I often get NaN returns here for these entropy calculations, I can't figure out how to work around that
 	    		for(int j = 0; j < counts.get(i).size(); j++){
 	    			int numTerms = counts.get(i).get(j)[1] + counts.get(i).get(j)[2];
+	    			//System.out.println("counts" + counts.get(i).get(j)[0]);
 	    			double ratio = (double) numTerms/dataset.size();
-	    			expectEntropy[i] += entropy(counts.get(i).get(j)) * ratio;
+	    			double tempEnt = entropy(counts.get(i).get(j));
+	    			//System.out.println("tempEnt: " + tempEnt);
+	    			expectEntropy[j] += (tempEnt * ratio);
+	    			//System.out.println("." + expectEntropy[j]);
 	    		}
 	    	}
-	    	
-	    	//Something about if entropy = 0, return.  Here?
 	    	
 	    	for(int i = 0; i < startEntropy.length; i++){ //Calculate the Info Gain for each attribute
 	    		double currentGain = startEntropy[i] - expectEntropy[i];
@@ -174,49 +175,50 @@ public class ID3 extends classAlg {
     			}
     		}
     		
-    		ArrayList<int[]> temp = counts.get(index);
-    		counts.remove(index); //Remove attribute from the list
-    		
-    		
-	    	
-//    		for(int i = 0; i < subList.size(); i++){
-//    			ArrayList<ArrayList<int[]>> newCounts = new ArrayList<ArrayList<int[]>>();
-//    			for(int j = 0; j < dataset.get(0).size(); j++){
-//    				newCounts.add(new ArrayList<int[]>());
-//    			}
-//    			counts = updateCounts(subList.get(i), newCounts, subClassList.get(i));
-//    		}
+    		ArrayList<int[]> temp = new ArrayList<int[]>(); //Remove attribute values from the count list
+    		for(int i = 0; i < counts.size(); i++){
+    			if(index < counts.get(i).size()){
+    				temp.add(counts.get(i).get(index));
+    				counts.get(i).remove(index);
+    			}
+    		}
     		
     		tree.current.setAttr(temp, index); //Update values at the current node after split
     		
 	    	//Recurse to split again
     		if(tree.current.children != null){
 		    	for(int i = 0; i < tree.current.children.size(); i++){
-		    		if(tree.current.branches[i][1] == 0){
-		    			tree.current.setLeaf(i, 1);
-		    		}else if(tree.current.branches[i][2] == 0){
-		    			tree.current.setLeaf(i, 2);
-		    		}else{
+		    		if(tree.current.branches[i][1] == 0){ //If the value has pure distribution, node is a leaf
 		    			tree.current = tree.current.children.get(i);
-		    			tree = split(counts, tree, classList, subList.get(i), tree.current);
+		    			tree.current.setLeaf(i, 0);
 		    			tree.current = tree.current.parent;
+		    		}else if(tree.current.branches[i][2] == 0){ //If the value has pure distribution, node is a leaf
+		    			tree.current = tree.current.children.get(i);
+		    			tree.current.setLeaf(i, 0);
+		    			tree.current = tree.current.parent;
+		    		}else{
+		    			if(i < subList.size()){ //Otherwise recurse with the subset list
+		    				tree.current = tree.current.children.get(i);
+		    				tree = split(counts, tree, classList, subList.get(i), tree.current);
+		    				tree.current = tree.current.parent;
+		    			}
 		    		}
 		    	}
     		}
     	}
-    	//tree.current = tree.current.parent;
+    	
     	return tree;
     }
     
     //Calculate the entropy
     private double entropy(int[] entryTotals){
-    	double entropy = 0;
+    	double entropy = 0.0;
     	int numValues = entryTotals[1] + entryTotals[2];
     	double prob1 = (double) entryTotals[1] / numValues;
     	double prob2 = (double) entryTotals[2] / numValues;
     	
-    	entropy += Math.abs((prob1*(Math.log(prob1)/Math.log(2)))); //-P1*log2(P1)
-    	entropy += Math.abs((prob2*(Math.log(prob2)/Math.log(2)))); //-P2*log2(P2)
+    	entropy += -(prob1*(Math.log(prob1)/Math.log(2))); //-P1*log2(P1)
+    	entropy += -(prob2*(Math.log(prob2)/Math.log(2))); //-P2*log2(P2)
 
     	return entropy;
     }
@@ -258,6 +260,7 @@ public class ID3 extends classAlg {
     	return counts;
     }
     
+    //Check a nested array for containing a value
     public int[] arrayContain(ArrayList<ArrayList<int[]>> counts, int value, int in){
     	int[] found = new int[]{0,0};
     	for(int i = 0; i < counts.get(in).size(); i++){
@@ -304,7 +307,7 @@ public class ID3 extends classAlg {
     	
     	//Set the node to a leaf by setting its classification
     	public void setLeaf(int i, int classIndex){
-    		this.value = branches[i][classIndex];
+    		this.value = this.parent.branches[i][classIndex];
     		this.leaf = true;
     	}    	
     }
@@ -318,6 +321,7 @@ public class ID3 extends classAlg {
     		this.size = 0;
     	}
     	
+    	//Set up the root and current node
     	public void add(Node newNode){
     		if(this.size == 0){ //Handle tree with no nodes
     			this.current = newNode;
